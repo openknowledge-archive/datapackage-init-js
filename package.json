@@ -1,0 +1,31 @@
+{
+  "name": "datapackage-init",
+  "description": "Initialize and create Data Packages",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": {
+    "name": "Rufus Pollock",
+    "email": "rufus.pollock@okfn.org"
+  },
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/okfn/datapackage-init.git"
+  },
+  "bugs": {
+    "url": "http://github.com/okfn/datapackage-init/issues"
+  },
+  "engines": [
+    "node >= 0.6"
+  ],
+  "main": "./index",
+  "dependencies": {
+    "init-package-json": "",
+    "jts-infer": ""
+  },
+  "devDependencies": {
+    "mocha": ""
+  }
+}
