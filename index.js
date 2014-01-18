@@ -5,14 +5,14 @@ var  initpkgjson = require('init-package-json')
   , assert = require('assert')
   ;
 
-exports.init = function(path, cb) {
+exports.init = function(path_, cb) {
   var self = this;
   var promptFile = path.join(__dirname, 'prompt.js');
-  if (typeof path === 'string') {
-    dir = path;
+  if (typeof path_ === 'string') {
+    dir = path_;
   } else {
     var dir = process.cwd();
-    cb = path;
+    cb = path_;
   }
 
   if (!cb) cb = function(er) {
