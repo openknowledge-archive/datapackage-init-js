@@ -1,5 +1,4 @@
 var dpm = require('../index')
-  , util = require('../util')
   , assert = require('assert')
   ;
 
