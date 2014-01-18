@@ -22,10 +22,10 @@
   ],
   "main": "./index",
   "dependencies": {
-    "init-package-json": "",
     "jts-infer": ""
   },
   "devDependencies": {
-    "mocha": ""
+    "mocha": "",
+    "rimraf": ""
   }
 }

@@ -1,32 +1,52 @@
-var  initpkgjson = require('init-package-json')
-  , fs = require('fs')
+var fs = require('fs')
   , path = require('path')
   , jtsinfer = require('jts-infer')
   , assert = require('assert')
   ;
 
 exports.init = function(path_, cb) {
-  var self = this;
-  var promptFile = path.join(__dirname, 'prompt.js');
-  if (typeof path_ === 'string') {
-    dir = path_;
-  } else {
-    var dir = process.cwd();
-    cb = path_;
-  }
-
-  if (!cb) cb = function(er) {
-    if (er) {
-      console.error('\n' + er.message);
+  var dpjsonPath = path.join(path_, 'datapackage.json');
+  exports.defaultsForLocalPackage(path_, function(err, dpjson) {
+    if (err) {
+      cb(err)
+    } else {
+      var fdata = JSON.stringify(dpjson, null, 2);
+      fs.writeFileSync(dpjsonPath, fdata, {encoding: 'utf8'});
+      cb(err, dpjson);
     }
-  }
-
-  var configData = {}
-  exports.createResourceEntries(dir, function(err, resources) {
-    configData.resources = resources;
-    initpkgjson(dir, promptFile, configData, cb);
   });
 }
+
+exports.simpleDefaults = function() {
+  var out = {
+    "name" : 'my-data-package',
+    "version" : '0.1.0',
+    "licenses" : [{
+      type: 'ODC-PDDL',
+      url: 'http://opendatacommons.org/licenses/pddl/1.0/'
+    }]
+  }
+  return out;
+}
+
+// get defaults based on a file path (assumed to be directory)
+exports.defaultsForLocalPackage = function(path_, cb) {
+  var dpjson = exports.simpleDefaults();
+  dpjson.name = path.basename(path_).replace(/^node-|[.-]js$/g, '');
+  dpjson.description = _getDescriptionFromReadme(path_);
+  dpjson.repository = _getGitRepo(path_);
+  exports.createResourceEntries(path_, function(err, resources) {
+    if (err) {
+      console.error(err)
+    }
+    dpjson.resources = resources;
+    cb(null, dpjson);
+  });
+
+}
+
+// ========================================================
+// Helpers
 
 // locate potential data files in this directory
 exports.findDataFiles = function(dir) {
@@ -98,8 +118,51 @@ exports.createResourceEntries = function(dir, cb) {
   }
   dataFiles.forEach(function(fp, idx) {
     exports.createResourceEntry(fp, function(err, resource) {
+      // fix path in resource to be relative
+      if (resource.path) {
+        resource.path = path.relative(dir, resource.path);
+      }
       resources[idx] = resource;
       done();
     });
   });
 }
+
+_getGitRepo = function(dir) {
+  var path_ = path.join(dir, '.git', 'config');
+  try {
+    var gconf = fs.readFileSync(path_).toString()
+    gconf = gconf.split(/\r?\n/)
+    var i = gconf.indexOf('[remote "origin"]')
+    if (i !== -1) {
+      var u = gconf[i + 1]
+      if (!u.match(/^\s*url =/)) u = gconf[i + 2]
+      if (!u.match(/^\s*url =/)) u = null
+      else u = u.replace(/^\s*url = /, '')
+    }
+    if (u && u.match(/^git@github.com:/)) {
+      u = u.replace(/^git@github.com:/, 'git://github.com/')
+    }
+    return u;
+  }
+  catch (e) { 
+  }
+}
+
+var _getDescriptionFromReadme = function(dir) {
+  var readmePath = path.join(dir, 'README.md');
+  try {
+    var src = fs.readFileSync(readmePath, 'utf8');
+    var description = src.split('\n').filter(function (line) {
+        return /\s+/.test(line)
+            && !line.trim().match(/^#/)
+        ;
+    })[0]
+        .trim()
+        .replace(/\.$/, '')
+    ;
+    return description;
+  } catch(e) {
+    return ''
+  }
+} 

@@ -1,6 +1,46 @@
-var dpm = require('../index')
+var path = require('path')
+  , fs = require('fs')
+  , rimraf = require('rimraf')
   , assert = require('assert')
+  , dpm = require('../index')
   ;
+
+describe('init', function(){
+  it('init OK', function(done) {
+    var path_ = '/tmp/test-data-package-init'
+    if (fs.existsSync(path_)) {
+      rimraf.sync(path_);
+    }
+    fs.mkdirSync(path_);
+    var dpjsonPath = path.join(path_, 'datapackage.json');
+    dpm.init(path_, function(err, dpjson) {
+      assert(fs.existsSync(dpjsonPath));
+      var outdp = JSON.parse(fs.readFileSync(dpjsonPath));
+      assert.equal(outdp.name, 'test-data-package-init');
+      done();
+    });
+  });
+});
+
+describe('defaults', function(){
+  it('getDefaults OK', function(done) {
+    var dpjson = dpm.simpleDefaults();
+    assert.equal(dpjson.name, 'my-data-package');
+    assert.equal(dpjson.version, '0.1.0');
+    assert.equal(dpjson.licenses[0].type, 'ODC-PDDL');
+    done();
+  });
+  it('getDefaultsForFilePath OK', function(done) {
+    dpm.defaultsForLocalPackage('test/data/dp1', function(err, dpjson) {
+      assert.equal(dpjson.version, '0.1.0');
+      assert.equal(dpjson.name, 'dp1');
+      assert.equal(dpjson.description, 'This is a data package');
+      assert.equal(dpjson.resources[0].path, 'data.csv');
+      // TODO: test git stuff etc
+      done();
+    });
+  });
+});
 
 describe('basics', function(){
   it('findDataFiles CSV OK', function() {

@@ -15,12 +15,45 @@ npm install datapackage-init
 
 # Usage
 
-```
-var init = require('datapackage-init');
+Following assume you've imported the module as follows:
 
-init.init(path, callback(err, datapackageJson));
+```
+var dpinit = require('datapackage-init');
+```
+
+## init.init
+
+Create a datapackage.json at the path specified.
+
+```
+dpinit.init(path, callback(err, datapackageJson));
 ```
 
 * `path`: optional path to where your data package is (will use this to search
   for data to add, for an existing datapackage.json to update etc)
+
+## init.simpleDefaults
+
+Generate simple defaults for a `datapackage.json`
+
+```
+var defaults = dpinit.simpleDefaults();
+```
+
+## init.defaultsForLocalPackage
+
+Get defaults based on a local file-system data package
+
+```
+dpinit.defaultsForLocalPackage(path_, cb)
+```
+
+* `path_`: path to the data package directory
+
+Defaults here will include things like:
+
+- Generating a name based on the directory
+- Generating a description based on a README (if present)
+- Searching for data files (csv and geojson at present) and adding them to the
+  resources
 
