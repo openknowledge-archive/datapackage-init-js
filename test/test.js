@@ -27,7 +27,7 @@ describe('defaults', function(){
     var dpjson = dpm.simpleDefaults();
     assert.equal(dpjson.name, 'my-data-package');
     assert.equal(dpjson.version, '0.1.0');
-    assert.equal(dpjson.licenses[0].type, 'ODC-PDDL');
+    assert.equal(dpjson.license, 'PDDL-1.0');
     done();
   });
   it('getDefaultsForFilePath OK', function(done) {

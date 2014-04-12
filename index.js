@@ -20,11 +20,12 @@ exports.init = function(path_, cb) {
 exports.simpleDefaults = function() {
   var out = {
     "name" : 'my-data-package',
+    "title": '',
+    "homepage": '',
     "version" : '0.1.0',
-    "licenses" : [{
-      type: 'ODC-PDDL',
-      url: 'http://opendatacommons.org/licenses/pddl/1.0/'
-    }]
+    "license" : 'PDDL-1.0',
+    "resources": []
+
   }
   return out;
 }
