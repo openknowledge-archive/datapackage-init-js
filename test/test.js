@@ -31,7 +31,7 @@ describe('defaults', function(){
     done();
   });
   it('getDefaultsForFilePath OK', function(done) {
-    dpm.defaultsForLocalPackage('test/data/dp1', function(err, dpjson) {
+    dpm.defaultsForLocalPackage('test/fixtures/dp1', function(err, dpjson) {
       assert.equal(dpjson.version, '0.1.0');
       assert.equal(dpjson.name, 'dp1');
       assert.equal(dpjson.description, 'This is a data package');
@@ -44,15 +44,15 @@ describe('defaults', function(){
 
 describe('basics', function(){
   it('findDataFiles CSV OK', function() {
-    var out = dpm.findDataFiles('test/data/dp1');
+    var out = dpm.findDataFiles('test/fixtures/dp1');
     assert.deepEqual(['data.csv'], out);
   });
   it('findDataFiles GeoJSON OK', function() {
-    var out = dpm.findDataFiles('test/data/dp2');
+    var out = dpm.findDataFiles('test/fixtures/dp2');
     assert.deepEqual(['data.geojson'], out);
   });
   it('createResourceEntry OK', function(done) {
-    var fp = 'test/data/dp1/data.csv';
+    var fp = 'test/fixtures/dp1/data.csv';
     dpm.createResourceEntry(fp, function(err, out) {
       var exp = {
         name: 'data',
@@ -80,7 +80,7 @@ describe('basics', function(){
     });
   });
   it('createResourceEntry GeoJSON OK', function(done) {
-    var fp = 'test/data/dp2/data.geojson';
+    var fp = 'test/fixtures/dp2/data.geojson';
     dpm.createResourceEntry(fp, function(err, out) {
       var exp = {
         name: 'data',
@@ -94,7 +94,7 @@ describe('basics', function(){
     });
   });
   it('createResourceEntries OK', function(done) {
-    dpm.createResourceEntries('test/data/dp1', function(err, out) {
+    dpm.createResourceEntries('test/fixtures/dp1', function(err, out) {
       assert.equal(out.length, 1);
       assert.equal(out[0].name, 'data');
       done();
