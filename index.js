@@ -5,14 +5,50 @@ var fs = require('fs')
   ;
 
 exports.init = function(path_, cb) {
+  path_ = path_.replace(/datapackage.json$/, '');
   var dpjsonPath = path.join(path_, 'datapackage.json');
-  exports.defaultsForLocalPackage(path_, function(err, dpjson) {
+  exports.create(path_, function(err, dpjson) {
     if (err) {
       cb(err)
     } else {
       var fdata = JSON.stringify(dpjson, null, 2);
       fs.writeFileSync(dpjsonPath, fdata, {encoding: 'utf8'});
       cb(err, dpjson);
+    }
+  });
+}
+
+exports.create = function(path_, cb) {
+  path_ = path_.replace(/datapackage.json$/, '');
+  var dpjsonPath = path.join(path_, 'datapackage.json');
+  existing = fs.existsSync(dpjsonPath) ?
+      existing = JSON.parse(fs.readFileSync(dpjsonPath, 'utf8'))
+      :
+      { resources: [] }
+    ;
+  exports.defaultsForLocalPackage(path_, function(err, dpjson) {
+    if (err) {
+      cb(err)
+    } else {
+      // update existing but do not overwrite existing data in it
+      for(k in dpjson) {
+        if (k == 'resources') {
+          var existingResPaths = existing['resources'].map(function(res) {
+            return res['path']
+          });
+          dpjson['resources'].forEach(function(res) {
+            if (existingResPaths.indexOf(res['path']) === -1) {
+              existing['resources'].push(res);
+            }
+          });
+        } else {
+          // if key not present add o/w do nothing
+          if (!(k in existing)) {
+            existing[k] = dpjson[k];
+          }
+        }
+      }
+      cb(err, existing);
     }
   });
 }
@@ -43,7 +79,6 @@ exports.defaultsForLocalPackage = function(path_, cb) {
     dpjson.resources = resources;
     cb(null, dpjson);
   });
-
 }
 
 // ========================================================

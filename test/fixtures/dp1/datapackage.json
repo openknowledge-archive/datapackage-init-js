@@ -1,0 +1,8 @@
+{
+  "name": "dp1-test-it",
+  "resources": [
+    {
+      "path": "abc.csv"
+    }
+  ]
+}

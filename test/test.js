@@ -22,6 +22,20 @@ describe('init', function(){
   });
 });
 
+describe('create', function(){
+  it('update existing datapackage.json', function(done) {
+    var path_ = 'test/fixtures/dp1';
+    dpm.create(path_, function(err, dpjson) {
+      console.log(dpjson);
+      assert.equal(dpjson.name, 'dp1-test-it');
+      assert.equal(dpjson.license, 'PDDL-1.0');
+      assert.equal(dpjson.resources.length, 2);
+      assert.equal(dpjson.resources[1].path, 'data.csv');
+      done();
+    });
+  });
+});
+
 describe('defaults', function(){
   it('getDefaults OK', function(done) {
     var dpjson = dpm.simpleDefaults();
