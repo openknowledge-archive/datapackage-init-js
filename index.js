@@ -4,6 +4,7 @@ var fs = require('fs')
   , assert = require('assert')
   ;
 
+// init datapackage.json on disk
 exports.init = function(path_, cb) {
   path_ = path_.replace(/datapackage.json$/, '');
   var dpjsonPath = path.join(path_, 'datapackage.json');
@@ -18,6 +19,7 @@ exports.init = function(path_, cb) {
   });
 }
 
+// create Data Package JSON
 exports.create = function(path_, cb) {
   path_ = path_.replace(/datapackage.json$/, '');
   var dpjsonPath = path.join(path_, 'datapackage.json');
