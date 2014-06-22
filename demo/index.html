@@ -1,0 +1,35 @@
+<html>
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+  <h1>DataPackage.json Creator</h1>
+  <div class="row">
+    <div class="span6">
+      <form class="form form-horizontal js-dp">
+        <label>Title</label>
+        <input type"text" name="title" />
+
+        <label>Name</label>
+        <input type"text" name="name" />
+
+        <h3>Add file</h3>
+        <input type="file" />
+
+        <button type="submit">Go</button>
+      </form>
+    </div>
+    <div class="span6">
+      <textarea class="js-dpjson" style="height: 100%; width: 100%;"></textarea>
+    </div>
+  </div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="bundle.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
