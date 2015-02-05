@@ -1,10 +1,60 @@
 var jtsinfer = require('jts-infer')
   , createReadStream = require('filereader-stream')
+  , http = require('http')
+  , licenseTemplate = { 'url': '', 'name': '', 'id': '' }
+  , licenses = []
   ;
 
+(function initializeLicenses() {
+  var ids = [
+        'ODC-PDDL-1.0',
+        'ODC-BY-1.0',
+        'ODbL-1.0',
+        'CC0-1.0',
+        'CC-BY-4.0',
+        'CC-BY-SA-4.0'
+      ];
+
+  $.each(ids, function (_, id) {
+    http.get({
+      host: 'api.github.com',
+      port: 443,
+      path: '/repos/okfn/licenses/contents/licenses/' + id + '.json',
+      withCredentials: false
+    }, function(response) {
+      response.on('data', function (chunk) {
+        json = JSON.parse(chunk);
+        bin64 = json.content;
+        buf = new Buffer(bin64, 'base64');
+        lic = JSON.parse(buf.toString());
+        licenses.push({ 'url': lic.url, 'name': lic.title, 'id': lic.id });
+      });
+    });
+  });
+}());
+
+var getLicense = function (id) {
+  var idx = 0
+    , len = licenses.length
+    , license = licenseTemplate
+    ;
+
+  for (; idx < len; idx += 1) {
+    if (id === licenses[idx].id) {
+      license = licenses[idx];
+      break;
+    }
+  }
+
+  return license;
+}
+
 updateDataPackageJson = function(current, newValues, callback) {
-  var files = newValues.files;
+  var files = newValues.files
+    , license = newValues.license
+    ;
   delete newValues.files;
+  delete newValues.license;
 
   var out = $.extend(current, newValues);
 
@@ -16,6 +66,12 @@ updateDataPackageJson = function(current, newValues, callback) {
       .replace(/--+/g, '-')
       .replace(/[^\w-]+/g, '')
       ;
+  }
+
+  if (license === '') {
+    out.licenses = [licenseTemplate];
+  } else {
+    out.licenses = [getLicense(license)];
   }
 
   out.resources = [];
