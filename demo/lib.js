@@ -2,9 +2,61 @@ var jtsinfer = require('jts-infer')
   , createReadStream = require('filereader-stream')
   ;
 
+var getLicense = function (licenses, id) {
+  var idx = 0
+    , len = licenses.length
+    , license
+    ;
+
+  for (; idx < len; idx += 1) {
+    if (id === licenses[idx].id) {
+      license = licenses[idx];
+      break;
+    }
+  }
+
+  return license;
+}
+
+window.licenseOptions = [
+  {
+    "url": "http://www.opendefinition.org/licenses/odc-pddl",
+    "title": "Open Data Commons Public Domain Dedication and Licence 1.0",
+    "id": "ODC-PDDL-1.0"
+  },
+  {
+    "url": "http://www.opendefinition.org/licenses/odc-by",
+    "title": "Open Data Commons Attribution License 1.0",
+    "id": "ODC-BY-1.0"
+  },
+  {
+    "url": "http://www.opendefinition.org/licenses/odc-odbl",
+    "title": "Open Data Commons Open Database License 1.0",
+    "id": "ODbL-1.0"
+  },
+  {
+    "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "title": "CC0 1.0",
+    "id": "CC0-1.0"
+  },
+  {
+    "url": "https://creativecommons.org/licenses/by/4.0/",
+    "title": "Creative Commons Attribution 4.0",
+    "id": "CC-BY-4.0"
+  },
+  {
+    "url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "title": "Creative Commons Attribution Share-Alike 4.0",
+    "id": "CC-BY-SA-4.0"
+  }
+];
+
 updateDataPackageJson = function(current, newValues, callback) {
-  var files = newValues.files;
+  var files = newValues.files
+    , license = newValues.license
+    ;
   delete newValues.files;
+  delete newValues.license;
 
   var out = $.extend(current, newValues);
 
@@ -16,6 +68,12 @@ updateDataPackageJson = function(current, newValues, callback) {
       .replace(/--+/g, '-')
       .replace(/[^\w-]+/g, '')
       ;
+  }
+
+  if (license === '') {
+    out.licenses = [{ 'url': '', 'name': '', 'id': '' }];
+  } else {
+    out.licenses = [getLicense(licenseOptions, license)];
   }
 
   out.resources = [];
