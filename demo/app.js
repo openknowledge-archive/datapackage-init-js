@@ -1,18 +1,10 @@
 jQuery(document).ready(function($) {
   var $form = $('.js-dp')
     , dp = {}
-    , $licenseSelect = $('select[name="license"]')
-    , defaultLicenseOption
     ;
-  defaultLicenseOption = document.createElement('option');
-  defaultLicenseOption.setAttribute('value', '');
-  $licenseSelect.append(defaultLicenseOption);
-  $.each(licenseOptions, function (_, license) {
-    var option = document.createElement('option');
-    option.setAttribute('value', license.id);
-    option.innerText = license.id;
-    $licenseSelect.append(option);
-  });
+
+  initializeLicenseOptions(licenseOptions);
+
   $form.on('submit', function(e) {
     e.preventDefault();
     onChangeForm($form, dp);
@@ -77,3 +69,21 @@ parseQueryString = function(q) {
   return urlParams;
 };
 
+function initializeLicenseOptions(licenseOptions) {
+  var $licenseSelect = $('select[name="license"]')
+    , optionsFragment = document.createDocumentFragment()
+    , defaultOption = document.createElement('option');
+
+  defaultOption.setAttribute('value', '');
+
+  optionsFragment.appendChild(defaultOption);
+
+  $.each(licenseOptions, function (_, license) {
+    var option = document.createElement('option');
+    option.setAttribute('value', license.id);
+    option.innerText = license.id;
+    optionsFragment.appendChild(option);
+  });
+
+  $licenseSelect.append(optionsFragment);
+};
