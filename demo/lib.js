@@ -51,6 +51,21 @@ window.licenseOptions = [
   }
 ];
 
+getSchema = function(file) {
+  var def = $.Deferred();
+  // domnode-filestream - get errors
+  // var stream = new FileStream(f);
+
+  // does not work properly for some reason
+  // either get Uint8Array for column headings or with other options like binary or text get nothing
+  // var stream = createReadStream(f, {output: 'binary'});
+  var stream = createReadStream(file);
+  jtsinfer(stream, function(err, schema) {
+    def.resolve(file,schema);
+  })
+  return def.promise();
+}
+
 updateDataPackageJson = function(current, newValues, callback) {
   var files = newValues.files
     , license = newValues.license
@@ -81,27 +96,18 @@ updateDataPackageJson = function(current, newValues, callback) {
   if (files && files.length > 0) {
     for(ii=0;ii<files.length;ii++) {
       var f = files[ii];
-      console.log(f);
-      var resource = {
-        name: f.name,
-        path: f.name,
-        mediatype: f.type,
-        bytes: f.size
-      };
-
-      // domnode-filestream - get errors
-      // var stream = new FileStream(f);
-
-      // does not work properly for some reason
-      // either get Uint8Array for column headings or with other options like binary or text get nothing
-      // var stream = createReadStream(f, {output: 'binary'});
-      var stream = createReadStream(f);
-      jtsinfer(stream, function(err, schema) {
-        console.log(schema);
+      var schema = getSchema(f);
+      schema.done(function(file, schema) {
+        var resource = {
+          name: file.name,
+          path: file.name,
+          mediatype: file.type,
+          bytes: file.size
+        };
         resource.schema = schema;
         out.resources.push(resource);
         callback(null, out);
-      })
+      });
     }
   } else {
     callback(null, out);
