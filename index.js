@@ -59,6 +59,7 @@ exports.simpleDefaults = function() {
   var out = {
     "name" : 'my-data-package',
     "title": '',
+    "description": '',
     "homepage": '',
     "version" : '0.1.0',
     "license" : 'PDDL-1.0',
