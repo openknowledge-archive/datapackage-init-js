@@ -5,7 +5,24 @@
 </head>
 <body>
 <div class="container">
-  <h1>DataPackage.json Creator</h1>
+  <h1>DataPackage.json Creator [<a href="https://github.com/okfn/datapackage-init/tree/master/demo">source code for this app</a>]</h1>
+  <div style="font-size: 120%; line-height: 1.5em; border-bottom: solid 2px #bbb; padding: 10px 50px; margin-bottom: 20px;">
+    <p>
+    This app is built in pure Javascript and HTML and is intentionally very simple (and unstyled).
+    </p>
+    <p>It is intended as a <strong>demonstrator</strong> and for <strong>direct code copying</strong> by those who want to <strong>integrate Data Package creation into their own apps and workflows</strong>. <a href="https://github.com/okfn/datapackage-init/tree/master/demo">Source code can be found here</a>.
+    </p>
+    <p>
+    It can be used directly for creating datapackage.json. However, that is not its primary purpose and if <strong>you are looking for an online DataPackage.json creator we recommend visiting <a href="http://data.okfn.org/tools/create">the creator app on data.okfn.org</a></strong>.
+    </p>
+  </div>
+
+  <!--
+  ###############
+  app begins here
+  
+  this is what your want to study and/or copy if you are building your own app
+  -->
   <div class="row">
     <div class="span6">
       <form class="form form-horizontal js-dp">
@@ -35,7 +52,14 @@
 </div>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<!--
+this is the browserified bundle with all the JS libs in it
+you will want to directly reuse this in your app (or link to the online version)
+-->
 <script src="bundle.js"></script>
+
+<!-- some code specific to this app - you may want to copy this code into your own app (or not) ... -->
 <script src="app.js"></script>
 
 </body>
