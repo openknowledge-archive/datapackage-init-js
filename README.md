@@ -15,7 +15,7 @@ npm install datapackage-init
 
 # Usage
 
-Following assume you've imported the module as follows:
+Start off by requiring the module as follows:
 
 ```
 var dpinit = require('datapackage-init');
