@@ -62,7 +62,7 @@ exports.simpleDefaults = function() {
     "description": '',
     "homepage": '',
     "version" : '0.1.0',
-    "license" : 'PDDL-1.0',
+    "license" : 'ODC-PDDL-1.0',
     "resources": []
 
   }

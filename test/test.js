@@ -28,7 +28,7 @@ describe('create', function(){
     dpm.create(path_, function(err, dpjson) {
       console.log(dpjson);
       assert.equal(dpjson.name, 'dp1-test-it');
-      assert.equal(dpjson.license, 'PDDL-1.0');
+      assert.equal(dpjson.license, 'ODC-PDDL-1.0');
       assert.equal(dpjson.resources.length, 2);
       assert.equal(dpjson.resources[1].path, 'data.csv');
       done();
@@ -41,7 +41,7 @@ describe('defaults', function(){
     var dpjson = dpm.simpleDefaults();
     assert.equal(dpjson.name, 'my-data-package');
     assert.equal(dpjson.version, '0.1.0');
-    assert.equal(dpjson.license, 'PDDL-1.0');
+    assert.equal(dpjson.license, 'ODC-PDDL-1.0');
     done();
   });
   it('getDefaultsForFilePath OK', function(done) {
