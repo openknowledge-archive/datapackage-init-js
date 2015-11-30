@@ -1,6 +1,6 @@
 var fs = require('fs')
   , path = require('path')
-  , jtsinfer = require('jts-infer')
+  , jtsinfer = require('json-table-schema-infer')
   , assert = require('assert')
   ;
 
