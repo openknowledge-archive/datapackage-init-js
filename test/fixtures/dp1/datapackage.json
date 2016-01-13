@@ -1,8 +1,32 @@
 {
-  "name": "dp1-test-it",
   "resources": [
     {
-      "path": "abc.csv"
+      "name": "data",
+      "path": "data.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "bytes": 48,
+      "schema": {
+        "fields": [
+          {
+            "name": "date",
+            "type": "date",
+            "description": ""
+          },
+          {
+            "name": "value",
+            "type": "number",
+            "description": ""
+          }
+        ]
+      }
     }
-  ]
+  ],
+  "name": "dp1-test-it",
+  "title": "",
+  "description": "This is a data package",
+  "homepage": "",
+  "version": "0.1.0",
+  "license": "ODC-PDDL-1.0",
+  "repository": ""
 }
