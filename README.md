@@ -3,7 +3,7 @@ datapackage-init
 
 Create [Data Package][] datapackage.json files.
 
-[Data Package]: http://data.okfn.org/standards/data-package
+[Data Package]: http://frictionlessdata.io/guides/data-package/
 
 # Installation
 
