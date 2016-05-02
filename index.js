@@ -2,7 +2,10 @@ var fs = require('fs')
   , path = require('path')
   , jtsinfer = require('json-table-schema-infer')
   , assert = require('assert')
+  , readline = require('readline')
+  , rl = readline.createInterface(process.stdin, process.stdout, null)
   ;
+
 
 // init datapackage.json on disk
 exports.init = function(path_, cb) {
@@ -57,13 +60,13 @@ exports.create = function(path_, cb) {
 
 exports.simpleDefaults = function() {
   var out = {
-    "name" : 'my-data-package',
-    "title": '',
-    "description": '',
-    "homepage": '',
-    "version" : '0.1.0',
-    "license" : 'ODC-PDDL-1.0',
-    "resources": []
+    'name' : 'my-data-package',
+    'title': '',
+    'description': '',
+    'homepage': '',
+    'version' : '0.1.0',
+    'license' : 'ODC-PDDL-1.0',
+    'resources': []
 
   }
   return out;
@@ -74,14 +77,15 @@ exports.defaultsForLocalPackage = function(path_, cb) {
   var dpjson = exports.simpleDefaults();
   dpjson.name = path.basename(path_).replace(/^node-|[.-]js$/g, '');
   dpjson.description = _getDescriptionFromReadme(path_);
-  dpjson.repository = _getGitRepo(path_);
-  exports.createResourceEntries(path_, function(err, resources) {
+  dpjson.repository = _getGitRepo(path_) ? _getGitRepo(path_) : '';
+  
+  exports.customizeDefaults(dpjson, path_, function(err, defaultDpJson) {
     if (err) {
-      console.error(err)
+      console.error(err);
     }
-    dpjson.resources = resources;
-    cb(null, dpjson);
-  });
+    
+    cb(null, defaultDpJson);
+  })
 }
 
 // ========================================================
@@ -94,7 +98,7 @@ exports.findDataFiles = function(dir) {
   var files = fs.existsSync(dataDir) ? fs.readdirSync(dataDir).map(function(fn) { return 'data/' + fn }) : fs.readdirSync(dir);
   files = files.filter(function(filename) {
     isDataFile = path.extname(filename) in {
-          '.csv': ''
+        '.csv': ''
         , '.geojson': ''
       };
     return isDataFile;
@@ -104,9 +108,34 @@ exports.findDataFiles = function(dir) {
 
 // TODO: replace with proper mimetype lookup
 var ext2mediatypeMap = {
-    'csv': 'text/csv'
+  'csv': 'text/csv'
   , 'geojson': 'application/json'
 };
+
+
+// get inputs from user that want to customize on git-init style
+exports.customizeDefaults = function(dpjson, path_, cb) {
+  rl.question('name: (' + dpjson.name + ')', function(inputName) {
+    rl.question('description: (' + dpjson.description + ')', function(inputDesc) {
+      rl.question('repository: (' + dpjson.repository + ')', function(inputRepo) {
+        rl.close();
+        
+        dpjson.name = inputName ? inputName : dpjson.name;
+        dpjson.description = inputDesc ? inputDesc : dpjson.description;
+        dpjson.repository = inputRepo ? inputRepo : dpjson.repository;
+        
+        exports.createResourceEntries(path_, function(err, resources) {
+          if (err) {
+            console.error(err)
+          }
+          
+          dpjson.resources = resources;
+          cb(null, dpjson);
+        });
+      });
+    })
+  })
+}
 
 // path should be relative ...
 // assuming we have csvs for the present
